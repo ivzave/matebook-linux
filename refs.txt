@@ -1,0 +1,2 @@
+External (SDSM, MethodObj, 4)
+External (MDBG, MethodObj, 1)

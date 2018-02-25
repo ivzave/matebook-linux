@@ -1,0 +1,68 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Igor Zavorotkin <ivzave@gmail.com>
+Date: Sun, 25 Feb 2018 23:01:16 +0300
+Subject: [PATCH 3/3] Fix battery/AC status reporting
+
+---
+ dsdt.dsl | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/dsdt.dsl b/dsdt.dsl
+index 2ffb9bf..41f21f9 100644
+--- a/dsdt.dsl
++++ b/dsdt.dsl
+@@ -17118,7 +17118,7 @@ DefinitionBlock ("", "DSDT", 2, "ALASKA", "A M I ", 0x01072009)
+         {
+             B1SC = \_SB.PCI0.LPCB.H_EC.ECRD (RefOf (\_SB.PCI0.LPCB.H_EC.B1CC))
+             B1SS = \_SB.PCI0.LPCB.H_EC.ECRD (RefOf (\_SB.PCI0.LPCB.H_EC.B1ST))
+-            Notify (\_SB.PCI0.LPCB.H_EC.BAT1, 0x81) // Information Change
++            Notify (\_SB.PCI0.LPCB.H_EC.BAT1, 0x80) // Status Change
+         }
+ 
+         If ((DPTF == One))
+@@ -31880,7 +31880,7 @@ DefinitionBlock ("", "DSDT", 2, "ALASKA", "A M I ", 0x01072009)
+                 PWRS = One
+                 \_PR.POWS = One
+                 PNOT ()
+-                Notify (BAT1, 0x81) // Information Change
++                Notify (ADP1, 0x80) // Status Change
+             }
+ 
+             Method (_Q35, 0, NotSerialized)  // _Qxx: EC Query
+@@ -31889,7 +31889,7 @@ DefinitionBlock ("", "DSDT", 2, "ALASKA", "A M I ", 0x01072009)
+                 PWRS = Zero
+                 \_PR.POWS = Zero
+                 PNOT ()
+-                Notify (BAT1, 0x81) // Information Change
++                Notify (ADP1, 0x80) // Status Change
+             }
+ 
+             Method (_Q36, 0, NotSerialized)  // _Qxx: EC Query
+@@ -31917,7 +31917,7 @@ DefinitionBlock ("", "DSDT", 2, "ALASKA", "A M I ", 0x01072009)
+ 
+             Method (_Q39, 0, NotSerialized)  // _Qxx: EC Query
+             {
+-                Notify (BAT1, 0x81) // Information Change
++                Notify (ADP1, 0x80) // Status Change
+                 Notify (BAT1, 0x80) // Status Change
+             }
+ 
+@@ -32025,13 +32025,14 @@ DefinitionBlock ("", "DSDT", 2, "ALASKA", "A M I ", 0x01072009)
+                     })
+                     If (ECAV)
+                     {
++                        Sleep (0x1F4)
+                         PKG1 [Zero] = (((B1ST & 0x10) >> 0x04
+                             ) | ((B1ST & 0x04) >> One))
+                         Local2 = (((BRCH << 0x08) + BRCL) * 0x03E8)
+                         Local3 = LFCC /* \_SB_.PCI0.LPCB.H_EC.LFCC */
+                         If (((Local2 / Local3) >= 0x03E3))
+                         {
+-                            PKG1 [Zero] = One
++                            /* PKG1 [Zero] = One */
+                         }
+ 
+                         Local0 = ((BACH << 0x08) + BACL) /* \_SB_.PCI0.LPCB.H_EC.BACL */
+-- 
+2.16.2
+

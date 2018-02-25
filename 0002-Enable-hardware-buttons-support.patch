@@ -1,0 +1,25 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Igor Zavorotkin <ivzave@gmail.com>
+Date: Sun, 25 Feb 2018 22:59:22 +0300
+Subject: [PATCH 2/3] Enable hardware buttons support
+
+Add HEBC field with value 0x00020000 to \_SB.HIDD device as expected by intel-hid driver
+---
+ dsdt.dsl | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/dsdt.dsl b/dsdt.dsl
+index 3db0656..2ffb9bf 100644
+--- a/dsdt.dsl
++++ b/dsdt.dsl
+@@ -32433,6 +32433,7 @@ DefinitionBlock ("", "DSDT", 2, "ALASKA", "A M I ", 0x01072009)
+             Name (HRDY, Zero)
+             Name (BTLD, Zero)
+             Name (BTS1, Zero)
++            Name (HEBC, 0x00020000)
+             Method (_STA, 0, Serialized)  // _STA: Status
+             {
+                 Return (0x0F)
+-- 
+2.16.2
+

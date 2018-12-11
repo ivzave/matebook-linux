@@ -11,7 +11,7 @@ First extract tables:
 
 Put them along with `refs.txt` and chosen patches, then decompile tables:
 
-	iasl -fe refs.txt -da dsdt.dsl ssdt*.dsl
+	iasl -fe refs.txt -da dsdt.dat ssdt*.dat
 
 Apply patches of your choice.
 
@@ -34,6 +34,11 @@ Nuff said. This fixes power button and volume buttons.
 It is buggy out of the box - reports charging while fully charged and more. This mostly fixes behaviour.
 
 ## Applying patches
+
+It's important to increment DSDT version in `dsdt.dsl`:
+
+	-DefinitionBlock ("", "DSDT", 2, "ALASKA", "A M I ", 0x01072009)
+	+DefinitionBlock ("", "DSDT", 2, "ALASKA", "A M I ", 0x01072010)
 
 After applying patches you can compile back DSDT table:
 

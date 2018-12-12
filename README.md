@@ -69,4 +69,20 @@ Setting SATA ALPM mode to any other than `max_performance` currently leads to gr
 
 ### Fixing reboot
 
-On Fedora the device isn't able to reboot often due to bug in wifi driver. Workaround is set `CleanupOnExit` to `false` in `/etc/firewalld/firewalld.conf`.
+On Fedora the device often fails to reboot due to bug in wifi driver. Workaround is set `CleanupOnExit` to `false` in `/etc/firewalld/firewalld.conf`.
+
+### Fixing wireless connectivity
+
+Some needed pieces of firmware can't be packaged into linux distributions due to licensing constraints, so they need to be installed manually.
+
+First mount efivars (if not mounted already):
+
+	mount -t efivarfs none /sys/firmware/efi/efivars
+
+Copy nvram file required by driver to location where driver expects it:
+
+	cp /sys/firmware/efi/efivars/nvram-74b00bd9-805a-4d61-b51f-43268123d113 /lib/firmware/brcm/brcmfmac4356-pcie.txt
+
+This fixes poor wifi signal quality. Next for bluetooth to work the hcd firmware is needed. At time of writing one can be obtained [here](https://github.com/winterheart/broadcom-bt-firmware/raw/master/brcm/BCM4356A2-0a5c-6420.hcd). File needs to be renamed to `BCM4354A2-0a5c-6420.hcd` and placed at `/lib/firmware/brcm/`.
+
+Optional step is to place a CLM blob which can be found [here](https://github.com/andrew997/cyw-fmac-fw/raw/master/brcmfmac4356-pcie.clm_blob) at `/lib/firmware/brcm/`.
